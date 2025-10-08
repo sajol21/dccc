@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import { Submission, SubmissionStatus, SubmissionType } from '../../types';
 
 
@@ -57,7 +57,7 @@ const SubmissionEditForm: React.FC<{
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <form onSubmit={handleSubmit} className="glass-effect p-8 rounded-xl shadow-xl w-full max-w-lg space-y-4">
-                <h2 className="text-xl font-bold text-white">Edit Submission</h2>
+                <h2 className="text-2xl font-heading text-white tracking-wide">Edit Submission</h2>
                 <div>
                     <label htmlFor="title" className="block text-sm font-medium text-text-primary">Title</label>
                     <input type="text" name="title" value={formData.title} onChange={handleChange} required className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white" />
@@ -81,7 +81,7 @@ const SubmissionEditForm: React.FC<{
                 </div>
                 <div className="flex justify-end space-x-4 pt-2">
                     <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-white transition-colors">Cancel</button>
-                    <button type="submit" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-white hover:bg-sky-400 transition-colors">Save Changes</button>
+                    <button type="submit" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-primary hover:bg-amber-300 transition-colors">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -90,7 +90,7 @@ const SubmissionEditForm: React.FC<{
 
 
 export const ManageSubmissions: React.FC = () => {
-    const { submissions, getUserById, updateSubmissionStatus, deleteSubmission, updateSubmission } = useContext(AppContext);
+    const { submissions, getUserById, updateSubmissionStatus, deleteSubmission, updateSubmission } = useContext(DataContext);
     const [filterStatus, setFilterStatus] = useState<SubmissionStatus | 'All'>('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [editingSubmission, setEditingSubmission] = useState<Submission | null>(null);
@@ -103,9 +103,9 @@ export const ManageSubmissions: React.FC = () => {
     
     const getStatusColor = (status: SubmissionStatus) => {
         switch (status) {
-            case SubmissionStatus.APPROVED: return 'bg-green-500/50 text-green-200';
-            case SubmissionStatus.PENDING: return 'bg-yellow-500/50 text-yellow-200';
-            case SubmissionStatus.REJECTED: return 'bg-red-500/50 text-red-200';
+            case SubmissionStatus.APPROVED: return 'bg-green-500/20 text-green-300';
+            case SubmissionStatus.PENDING: return 'bg-yellow-500/20 text-yellow-300';
+            case SubmissionStatus.REJECTED: return 'bg-red-500/20 text-red-300';
         }
     }
     
@@ -122,7 +122,7 @@ export const ManageSubmissions: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-white mb-6">Manage Submissions</h1>
+            <h1 className="text-4xl font-heading text-white mb-6 tracking-wider">Manage Submissions</h1>
             <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <input 
                     type="text" 
@@ -194,3 +194,6 @@ export const ManageSubmissions: React.FC = () => {
         </div>
     );
 };
+
+const LazyManageSubmissions = () => <ManageSubmissions />;
+export default LazyManageSubmissions;

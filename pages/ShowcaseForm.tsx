@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { AppContext } from '../context/AppContext';
+import { DataContext } from '../context/DataContext';
 import { SubmissionType } from '../types';
 
 export const ShowcaseForm: React.FC = () => {
-    const { addSubmission } = useContext(AppContext);
+    const { addSubmission } = useContext(DataContext);
     const [title, setTitle] = useState('');
     const [type, setType] = useState<SubmissionType>(SubmissionType.WRITING);
     const [content, setContent] = useState('');
@@ -40,7 +40,7 @@ export const ShowcaseForm: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
             <div className="glass-effect p-8 rounded-xl shadow-xl">
-                <h1 className="text-3xl font-bold text-white mb-2">Showcase Your Talent</h1>
+                <h1 className="text-5xl font-heading text-white mb-2 tracking-wide">Showcase Your Talent</h1>
                 <p className="text-text-secondary mb-6">Share your creation with the community. All submissions will be reviewed by an admin before being published.</p>
 
                 {submitted && (
@@ -84,7 +84,7 @@ export const ShowcaseForm: React.FC = () => {
                     </div>
 
                     <div className="flex justify-end">
-                        <button type="submit" className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-highlight hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-highlight transition-colors shadow-[0_0_20px_rgba(56,189,248,0.5)]">
+                        <button type="submit" className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-primary bg-highlight hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-highlight transition-colors shadow-[0_0_20px_rgba(251,191,36,0.4)]">
                             Submit for Review
                         </button>
                     </div>
@@ -93,3 +93,6 @@ export const ShowcaseForm: React.FC = () => {
         </div>
     );
 };
+
+const LazyShowcaseForm = () => <ShowcaseForm />;
+export default LazyShowcaseForm;

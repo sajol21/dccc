@@ -1,10 +1,9 @@
-
 import React, { useContext, useState } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import type { LeaderboardEntry } from '../../types';
 
 export const LeaderboardManagement: React.FC = () => {
-    const { leaderboard, users, setLeaderboard } = useContext(AppContext);
+    const { leaderboard, users, setLeaderboard } = useContext(DataContext);
     const [entries, setEntries] = useState<LeaderboardEntry[]>(leaderboard);
 
     const handleUpdate = (index: number, field: keyof LeaderboardEntry, value: string | number) => {

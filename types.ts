@@ -1,4 +1,3 @@
-
 export enum Role {
   GENERAL_STUDENT = 'General Student',
   GENERAL_MEMBER = 'General Member',
@@ -20,13 +19,18 @@ export enum SubmissionStatus {
   REJECTED = 'Rejected',
 }
 
+export enum Province {
+    CULTURAL = 'Cultural Province',
+    TECHNICAL = 'Technical Province',
+}
+
 export interface User {
   id: number;
   name: string;
   email: string;
   phone: string;
   batch: string;
-  department: string;
+  province: Province;
   role: Role;
 }
 
@@ -71,4 +75,10 @@ export interface Notification {
   read: boolean;
   createdAt: Date;
   userId?: number;
+}
+
+export interface ArchivedLeaderboard {
+    month: string;
+    year: number;
+    entries: LeaderboardEntry[];
 }

@@ -1,8 +1,8 @@
-import { User, Submission, LeaderboardEntry, Role, SubmissionType, SubmissionStatus, Notification, Event } from '../types';
+import { User, Submission, LeaderboardEntry, Role, SubmissionType, SubmissionStatus, Notification, Event, Province, ArchivedLeaderboard } from '../types';
 
 export const users: User[] = [
-  { id: 1, name: 'Admin User', email: 'admin@dccc.com', phone: '01000000000', batch: "N/A", department: 'Administration', role: Role.ADMIN },
-  { id: 2, name: 'Zahir Raihan', email: 'zahir@dccc.com', phone: '01234567891', batch: "HSC'24", department: 'Humanities', role: Role.EXECUTIVE_MEMBER },
+  { id: 1, name: 'Admin User', email: 'admin@dccc.com', phone: '01000000000', batch: "HSC'N/A", province: Province.CULTURAL, role: Role.ADMIN },
+  { id: 2, name: 'Zahir Raihan', email: 'zahir@dccc.com', phone: '01234567891', batch: "HSC'24", province: Province.CULTURAL, role: Role.EXECUTIVE_MEMBER },
 ];
 
 export const submissions: Submission[] = [
@@ -39,6 +39,15 @@ export const leaderboard: LeaderboardEntry[] = [
   { rank: 1, memberId: 2, note: 'For outstanding contributions in creative writing.' },
 ];
 
+export const previousLeaderboard: ArchivedLeaderboard = {
+    month: "May",
+    year: 2024,
+    entries: [
+        { rank: 1, memberId: 2, note: 'For an exceptional photography submission.' },
+    ]
+};
+
+
 // FIX: Added mock events data.
 export const events: Event[] = [
   {
@@ -61,3 +70,16 @@ export const notifications: Notification[] = [
     {id: 1, message: "Welcome to the DCCC Portal!", read: true, createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24)},
     {id: 3, message: "A new event 'Annual Cultural Fest 2024' has been added.", read: false, createdAt: new Date(Date.now() - 1000 * 60 * 5)},
 ];
+
+export const footerSettings = {
+  contact: {
+    address: 'Dhaka College, Dhaka-1205',
+    email: 'contact@dccc.bd',
+    phone: '+880 123 456 7890',
+  },
+  social: {
+    facebook: '#',
+    twitter: '#',
+    instagram: '#',
+  }
+};

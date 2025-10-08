@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
-// FIX: 'Role' is an enum used as a value, so it needs a value import. 'Submission' is an interface, so it can remain a type import.
-// UPDATE: Added SubmissionType to imports to use in switch statement.
 import { Role, SubmissionType, type Submission } from '../types';
-import { AppContext } from '../context/AppContext';
+import { DataContext } from '../context/DataContext';
+import { AuthContext } from '../context/AuthContext';
 
 interface SubmissionCardProps {
   submission: Submission;
@@ -28,12 +27,12 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
 
 const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
     const roleColors: Record<Role, string> = {
-        [Role.ADMIN]: 'bg-red-500/30 text-red-300 border-red-500/50',
-        [Role.EXECUTIVE_MEMBER]: 'bg-yellow-400/30 text-yellow-300 border-yellow-400/50',
-        [Role.LIFETIME_MEMBER]: 'bg-purple-500/30 text-purple-300 border-purple-500/50',
-        [Role.ASSOCIATE_MEMBER]: 'bg-teal-500/30 text-teal-300 border-teal-500/50',
-        [Role.GENERAL_MEMBER]: 'bg-sky-500/30 text-sky-300 border-sky-500/50',
-        [Role.GENERAL_STUDENT]: 'bg-slate-500/30 text-slate-300 border-slate-500/50',
+        [Role.ADMIN]: 'bg-red-500/20 text-red-300 border-red-500/30',
+        [Role.EXECUTIVE_MEMBER]: 'bg-amber-400/20 text-amber-300 border-amber-400/30',
+        [Role.LIFETIME_MEMBER]: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+        [Role.ASSOCIATE_MEMBER]: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+        [Role.GENERAL_MEMBER]: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+        [Role.GENERAL_STUDENT]: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
     };
     return (
         <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${roleColors[role] || roleColors[Role.GENERAL_STUDENT]}`}>
@@ -42,8 +41,9 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
     )
 }
 
-export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) => {
-  const { getUserById, addComment, updateLikes, currentUser } = useContext(AppContext);
+const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission }) => {
+  const { getUserById, addComment, updateLikes } = useContext(DataContext);
+  const { currentUser } = useContext(AuthContext);
   const author = getUserById(submission.authorId);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [newSuggestion, setNewSuggestion] = useState('');
@@ -94,7 +94,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) =>
   if (!author) return null;
 
   return (
-    <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-6 transition-all duration-500 group hover:shadow-2xl hover:shadow-highlight/20 hover:border-highlight/50">
+    <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-6 transition-all duration-500 group hover:shadow-2xl hover:shadow-highlight/10 hover:border-highlight/30">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
             <div className="h-11 w-11 rounded-full bg-accent flex items-center justify-center ring-2 ring-highlight/50 flex-shrink-0">
@@ -102,14 +102,14 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) =>
             </div>
             <div className="ml-4">
             <p className="font-bold text-text-primary">{author.name}</p>
-            <p className="text-sm text-text-secondary">{author.batch}, {author.department}</p>
+            <p className="text-sm text-text-secondary">{author.batch}, {author.province}</p>
             </div>
         </div>
         <RoleBadge role={author.role} />
       </div>
       
       <div className="pl-2">
-        <h3 className="text-2xl font-bold mb-2 text-white">{submission.title}</h3>
+        <h3 className="text-4xl font-heading tracking-wide mb-2 text-white">{submission.title}</h3>
         <p className="text-sm text-text-secondary mb-4 italic">{submission.description}</p>
         <div className="my-4">
             {renderContent()}
@@ -156,7 +156,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) =>
                 placeholder="Add a suggestion..." 
                 className="w-full bg-accent/50 border border-gray-600/50 rounded-md px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/50"
               />
-              <button type="submit" className="bg-highlight text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-sky-400 transition-colors shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+              <button type="submit" className="bg-highlight text-primary px-4 py-2 rounded-md text-sm font-semibold hover:bg-amber-300 transition-colors shadow-[0_0_15px_rgba(251,191,36,0.4)]">
                 Post
               </button>
             </form>
@@ -166,3 +166,5 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) =>
     </div>
   );
 };
+
+export const SubmissionCard = React.memo(SubmissionCardComponent);

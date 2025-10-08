@@ -1,6 +1,5 @@
-
 import React, { useContext } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import { Role } from '../../types';
 
 const UserIcon: React.FC<{className?: string}> = ({className}) => (
@@ -10,7 +9,7 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
 );
 
 export const UserManagement: React.FC = () => {
-  const { users, updateUserRole } = useContext(AppContext);
+  const { users, updateUserRole } = useContext(DataContext);
 
   return (
     <div>
@@ -20,7 +19,7 @@ export const UserManagement: React.FC = () => {
           <thead className="bg-accent/50">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Name</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Batch & Dept</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Batch & Province</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Role</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Actions</th>
             </tr>
@@ -42,7 +41,7 @@ export const UserManagement: React.FC = () => {
                     </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
-                    {user.batch}, {user.department}
+                    {user.batch}, {user.province}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === Role.ADMIN ? 'bg-red-500/50 text-red-200' : 'bg-green-500/50 text-green-200'}`}>

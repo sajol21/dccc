@@ -1,6 +1,5 @@
-
 import React, { useContext } from 'react';
-import { AppContext } from '../context/AppContext';
+import { DataContext } from '../context/DataContext';
 
 const CalendarIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -14,7 +13,7 @@ const LocationIcon = () => (
 );
 
 export const Events: React.FC = () => {
-    const { events } = useContext(AppContext);
+    const { events } = useContext(DataContext);
 
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

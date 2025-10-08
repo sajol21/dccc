@@ -1,6 +1,6 @@
-
 import React, { useContext, useState, useMemo } from 'react';
-import { AppContext } from '../context/AppContext';
+import { Link } from 'react-router-dom';
+import { DataContext } from '../context/DataContext';
 import { Role } from '../types';
 
 const UserIcon: React.FC<{className?: string}> = ({className}) => (
@@ -10,7 +10,7 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
 );
 
 export const Members: React.FC = () => {
-    const { users } = useContext(AppContext);
+    const { users } = useContext(DataContext);
     const [searchTerm, setSearchTerm] = useState('');
 
     const officialMembers = useMemo(() => {
@@ -23,21 +23,21 @@ export const Members: React.FC = () => {
         return officialMembers.filter(member => 
             member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             member.batch.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            member.department.toLowerCase().includes(searchTerm.toLowerCase())
+            member.province.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [searchTerm, officialMembers]);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold text-white tracking-tight sm:text-5xl">Member Directory</h1>
+                <h1 className="text-7xl font-heading text-white tracking-wider sm:text-8xl">Member Directory</h1>
                 <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">Connect with the official members of our club community.</p>
             </div>
             
             <div className="mb-8 max-w-lg mx-auto">
                 <input 
                     type="text"
-                    placeholder="Search by name, batch, or department..."
+                    placeholder="Search by name, batch, or province..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full glass-effect border-transparent rounded-full px-5 py-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/80"
@@ -46,16 +46,21 @@ export const Members: React.FC = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredMembers.map(member => (
-                    <div key={member.id} className="glass-effect rounded-lg p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-highlight/10">
-                        <div className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-accent bg-primary flex items-center justify-center">
-                            <UserIcon className="h-14 w-14 text-text-secondary" />
+                    <Link to={`/members/${member.id}`} key={member.id} className="block">
+                        <div className="glass-effect h-full rounded-lg p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-highlight/10">
+                            <div className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-accent bg-primary flex items-center justify-center">
+                                <UserIcon className="h-14 w-14 text-text-secondary" />
+                            </div>
+                            <h3 className="text-lg font-bold text-white">{member.name}</h3>
+                            <p className="text-highlight font-semibold text-sm">{member.role}</p>
+                            <p className="text-text-secondary text-xs mt-2">{member.batch}, {member.province}</p>
                         </div>
-                        <h3 className="text-lg font-bold text-white">{member.name}</h3>
-                        <p className="text-highlight font-semibold text-sm">{member.role}</p>
-                        <p className="text-text-secondary text-xs mt-2">{member.batch}, {member.department}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
     );
 };
+
+const LazyMembers = () => <Members />;
+export default LazyMembers;

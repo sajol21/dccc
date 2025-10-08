@@ -1,6 +1,5 @@
-
 import React, { useContext, useState } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import type { Event } from '../../types';
 
 const EventForm: React.FC<{ event?: Event, onSave: (event: Omit<Event, 'id'> | Event) => void, onCancel: () => void }> = ({ event, onSave, onCancel }) => {
@@ -37,8 +36,7 @@ const EventForm: React.FC<{ event?: Event, onSave: (event: Omit<Event, 'id'> | E
 };
 
 export const ManageEvents: React.FC = () => {
-    // FIX: Destructured deleteEvent from context to manage events.
-    const { events, addEvent, updateEvent, deleteEvent } = useContext(AppContext);
+    const { events, addEvent, updateEvent, deleteEvent } = useContext(DataContext);
     const [isModalOpen, setModalOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState<Event | undefined>(undefined);
 
@@ -73,7 +71,6 @@ export const ManageEvents: React.FC = () => {
                         </div>
                         <div className="space-x-3">
                             <button onClick={() => handleEdit(event)} className="text-blue-400 hover:text-blue-200 text-sm">Edit</button>
-                            {/* FIX: Wired up the delete button to the deleteEvent function from context. */}
                             <button onClick={() => window.confirm('Are you sure you want to delete this event?') && deleteEvent(event.id)} className="text-red-500 hover:text-red-300 text-sm">Delete</button>
                         </div>
                     </div>

@@ -1,6 +1,5 @@
-
 import React, { useContext, useMemo } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import { StatCard } from '../../components/admin/StatCard';
 import { SubmissionStatus } from '../../types';
 
@@ -11,7 +10,7 @@ const icons = {
 }
 
 export const AdminOverview: React.FC = () => {
-    const { users, submissions } = useContext(AppContext);
+    const { users, submissions } = useContext(DataContext);
 
     const pendingCount = useMemo(() => {
         return submissions.filter(s => s.status === SubmissionStatus.PENDING).length;
@@ -19,19 +18,22 @@ export const AdminOverview: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h1>
+            <h1 className="text-4xl font-heading text-white mb-6 tracking-wider">Dashboard Overview</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <StatCard title="Total Users" value={users.length} icon={<icons.Users />} />
                 <StatCard title="Total Submissions" value={submissions.length} icon={<icons.Submissions />} />
                 <StatCard title="Pending Approvals" value={pendingCount} icon={<icons.Pending />} />
             </div>
              <div className="mt-8">
-                <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
+                <h2 className="text-2xl font-heading text-white mb-4 tracking-wider">Quick Actions</h2>
                 <div className="flex flex-wrap gap-4">
-                    <a href="#/admin/submissions" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-white transition-colors">Manage Submissions</a>
-                    <a href="#/admin/users" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-white transition-colors">View Users</a>
+                    <a href="#/admin/submissions" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-primary transition-colors">Manage Submissions</a>
+                    <a href="#/admin/users" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-primary transition-colors">View Users</a>
                 </div>
             </div>
         </div>
     );
 };
+
+const LazyAdminOverview = () => <AdminOverview />;
+export default LazyAdminOverview;

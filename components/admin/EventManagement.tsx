@@ -1,9 +1,8 @@
-
 import React, { useContext, useState } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 
 export const EventManagement: React.FC = () => {
-  const { addEvent } = useContext(AppContext);
+  const { addEvent } = useContext(DataContext);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [venue, setVenue] = useState('');

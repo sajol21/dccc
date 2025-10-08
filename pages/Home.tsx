@@ -1,10 +1,10 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { AppContext } from '../context/AppContext';
+import { DataContext } from '../context/DataContext';
 import { SubmissionCard } from '../components/SubmissionCard';
 import { SubmissionStatus, SubmissionType } from '../types';
 
 export const Home: React.FC = () => {
-  const { submissions } = useContext(AppContext);
+  const { submissions } = useContext(DataContext);
   const [filter, setFilter] = useState<SubmissionType | 'All'>('All');
 
   const approvedSubmissions = useMemo(() => {
@@ -32,9 +32,9 @@ export const Home: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-extrabold text-white tracking-tight sm:text-6xl md:text-7xl">
+        <h1 className="text-7xl font-heading text-white tracking-wider sm:text-8xl md:text-9xl">
           <span className="block">DCCC</span>
-          <span className="block text-highlight">Creative Gallery</span>
+          <span className="block text-highlight">Talent Showcase</span>
         </h1>
         <p className="mt-6 max-w-2xl mx-auto text-lg text-text-secondary">Explore the vibrant talents from the members of Dhaka College Cultural Club.</p>
       </div>
@@ -88,3 +88,5 @@ const StyleInjector: React.FC = () => <style>{animationStyles}</style>;
 // You can include <StyleInjector /> once in your App.tsx or layout component.
 // For this single-file change, we'll assume it's handled globally.
 // In a real app, you would add this to your main CSS file.
+const LazyHome = () => <Home />;
+export default LazyHome;

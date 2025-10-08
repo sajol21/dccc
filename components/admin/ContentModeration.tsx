@@ -1,10 +1,9 @@
-
 import React, { useContext, useMemo } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 import { SubmissionStatus } from '../../types';
 
 export const ContentModeration: React.FC = () => {
-  const { submissions, getUserById, updateSubmissionStatus } = useContext(AppContext);
+  const { submissions, getUserById, updateSubmissionStatus } = useContext(DataContext);
 
   const pendingSubmissions = useMemo(() => {
     return submissions.filter(s => s.status === SubmissionStatus.PENDING);

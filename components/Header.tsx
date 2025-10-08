@@ -1,7 +1,7 @@
-
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
+import { AuthContext } from '../context/AuthContext';
+import { DataContext } from '../context/DataContext';
 import type { Notification } from '../types';
 
 const icons = {
@@ -23,7 +23,7 @@ const NavItem: React.FC<{ to: string; label: string; icon: React.ReactElement<an
         `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
         isActive
             ? 'bg-highlight/20 text-highlight shadow-lg'
-            : 'text-text-secondary hover:bg-white/10 hover:text-white'
+            : 'text-text-secondary hover:bg-white/10 hover:text-text-primary'
         }`;
     return (
         <NavLink to={to} className={navLinkClass}>
@@ -34,7 +34,8 @@ const NavItem: React.FC<{ to: string; label: string; icon: React.ReactElement<an
 };
 
 export const Header: React.FC = () => {
-  const { currentUser, notifications, setNotifications, logout } = useContext(AppContext);
+  const { currentUser, logout } = useContext(AuthContext);
+  const { notifications, setNotifications } = useContext(DataContext);
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotificationsOpen, setNotificationsOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -77,6 +78,7 @@ export const Header: React.FC = () => {
     { to: "/", label: "Home", icon: <icons.Home /> },
     ...(currentUser ? [{ to: "/showcase", label: "Showcase", icon: <icons.Showcase /> }] : []),
     { to: "/leaderboard", label: "Leaderboard", icon: <icons.Leaderboard /> },
+    { to: "/members", label: "Members", icon: <icons.Members /> },
     { to: "/resources", label: "Resources", icon: <icons.Resources /> },
     { to: "/about", label: "About", icon: <icons.About /> },
   ];
@@ -95,7 +97,7 @@ export const Header: React.FC = () => {
             {currentUser ? (
              <>
                 <div className="relative" ref={notificationsRef}>
-                    <button onClick={handleReadNotifications} className="p-2 rounded-full text-text-secondary hover:text-white hover:bg-white/10 transition-colors focus:outline-none">
+                    <button onClick={handleReadNotifications} className="p-2 rounded-full text-text-secondary hover:text-text-primary hover:bg-white/10 transition-colors focus:outline-none">
                         <icons.Bell className="h-6 w-6" />
                         {unreadCount > 0 && (
                             <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full ring-2 ring-secondary bg-red-500"/>
@@ -128,17 +130,17 @@ export const Header: React.FC = () => {
                         <p className="font-semibold">{currentUser?.name}</p>
                         <p className="text-xs text-text-secondary">{currentUser?.role}</p>
                       </div>
-                      <NavLink to="/profile" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-white">Your Profile</NavLink>
-                      {currentUser?.role === 'Admin' && <NavLink to="/admin" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-white">Admin Panel</NavLink>}
-                      <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-white">Sign out</button>
+                      <NavLink to="/profile" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-text-primary">Your Profile</NavLink>
+                      {currentUser?.role === 'Admin' && <NavLink to="/admin" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-text-primary">Admin Panel</NavLink>}
+                      <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-text-secondary hover:bg-white/10 hover:text-text-primary">Sign out</button>
                     </div>
                   )}
                 </div>
              </>
             ) : (
                 <div className="flex items-center space-x-2">
-                    <NavLink to="/login" className="px-3 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-white transition-colors">Login</NavLink>
-                    <NavLink to="/register" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-white hover:bg-sky-400 transition-colors shadow-[0_0_15px_rgba(56,189,248,0.5)]">Register</NavLink>
+                    <NavLink to="/login" className="px-3 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-text-primary transition-colors">Login</NavLink>
+                    <NavLink to="/register" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-primary hover:bg-amber-300 transition-colors shadow-[0_0_15px_rgba(251,191,36,0.4)]">Register</NavLink>
                 </div>
             )}
           </div>

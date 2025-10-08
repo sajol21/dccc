@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { AppContext } from '../../context/AppContext';
+import { DataContext } from '../../context/DataContext';
 
 export const Announcements: React.FC = () => {
-    const { addGlobalNotification } = useContext(AppContext);
+    const { addGlobalNotification } = useContext(DataContext);
     const [message, setMessage] = useState('');
     const [sent, setSent] = useState(false);
 
@@ -18,7 +18,7 @@ export const Announcements: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-white mb-6">Send Announcement</h1>
+            <h1 className="text-4xl font-heading text-white mb-6 tracking-wider">Send Announcement</h1>
             <p className="text-text-secondary mb-6">This message will be sent as a notification to all users.</p>
 
             {sent && (
@@ -42,7 +42,7 @@ export const Announcements: React.FC = () => {
                     />
                 </div>
                 <div className="flex justify-end">
-                    <button type="submit" className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-highlight hover:bg-sky-400">
+                    <button type="submit" className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-primary bg-highlight hover:bg-amber-300">
                         Send Notification
                     </button>
                 </div>
@@ -50,3 +50,6 @@ export const Announcements: React.FC = () => {
         </div>
     );
 };
+
+const LazyAnnouncements = () => <Announcements />;
+export default LazyAnnouncements;
