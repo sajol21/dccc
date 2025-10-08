@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 
 interface SubmissionCardProps {
   submission: Submission;
+  onImageClick?: (imageUrl: string) => void;
 }
 
 const AppreciateIcon = ({ filled }: { filled: boolean }) => (
@@ -41,22 +42,21 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
     )
 }
 
-const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission }) => {
-  const { getUserById, addComment, updateLikes } = useContext(DataContext);
+const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, onImageClick }) => {
+  const { getUserById, addComment, toggleAppreciation } = useContext(DataContext);
   const { currentUser } = useContext(AuthContext);
   const author = getUserById(submission.authorId);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [newSuggestion, setNewSuggestion] = useState('');
-  const [appreciated, setAppreciated] = useState(false);
+  
+  const appreciated = currentUser ? submission.likedBy.includes(currentUser.id) : false;
 
   const handleAppreciate = () => {
     if(!currentUser) {
         alert("Please log in to appreciate submissions.");
         return;
     }
-    const newLikes = appreciated ? submission.likes - 1 : submission.likes + 1;
-    updateLikes(submission.id, newLikes);
-    setAppreciated(!appreciated);
+    toggleAppreciation(submission.id);
   };
 
   const handleSuggestionSubmit = (e: React.FormEvent) => {
@@ -72,7 +72,14 @@ const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission }) 
       case SubmissionType.WRITING:
         return <p className="text-text-secondary whitespace-pre-wrap leading-relaxed">{submission.content.substring(0, 350)}...</p>;
       case SubmissionType.IMAGE:
-        return <img src={submission.content} alt={submission.title} className="rounded-lg object-cover w-full h-auto max-h-[60vh] border border-accent/50" />;
+        return (
+            <img 
+                src={submission.content} 
+                alt={submission.title} 
+                onClick={() => onImageClick && onImageClick(submission.content)}
+                className="rounded-lg object-cover w-full h-auto max-h-[60vh] border border-accent/50 cursor-pointer transition-transform duration-300 hover:scale-[1.02]" 
+            />
+        );
       case SubmissionType.VIDEO:
         return (
           <div className="aspect-video w-full rounded-lg border border-accent/50 overflow-hidden">

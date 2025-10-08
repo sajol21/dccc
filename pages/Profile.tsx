@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { DataContext } from '../context/DataContext';
 import { SubmissionCard } from '../components/SubmissionCard';
 import { SubmissionStatus, User, Province } from '../types';
+import { ImageModal } from '../components/ImageModal';
 
 const UserIcon: React.FC<{className?: string}> = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,6 +67,11 @@ export const Profile: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const { submissions, updateCurrentUser } = useContext(DataContext);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
 
   if (!currentUser) {
     return <div className="text-center py-10">Please log in to view your profile.</div>;
@@ -106,7 +112,7 @@ export const Profile: React.FC = () => {
         {userSubmissions.length > 0 ? (
           <div className="grid gap-8">
             {userSubmissions.map(submission => (
-              <SubmissionCard key={submission.id} submission={submission} />
+              <SubmissionCard key={submission.id} submission={submission} onImageClick={handleImageClick} />
             ))}
           </div>
         ) : (
@@ -117,6 +123,7 @@ export const Profile: React.FC = () => {
         )}
       </div>
        {isEditing && <EditProfileModal user={currentUser} onSave={handleSaveProfile} onCancel={() => setIsEditing(false)} />}
+       {selectedImage && <ImageModal imageUrl={selectedImage} onClose={() => setSelectedImage(null)} />}
     </div>
   );
 };

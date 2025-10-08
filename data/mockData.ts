@@ -14,7 +14,8 @@ export const submissions: Submission[] = [
     content: 'In the realm of bits and bytes, a new art is born. Pixels dance and algorithms sing, creating masterpieces unseen by the naked eye. This is the story of the digital canvas, where imagination knows no bounds and creativity is the only limit. We explore the intersection of technology and art...',
     description: 'An article on the rise of digital art.',
     status: SubmissionStatus.APPROVED,
-    likes: 42,
+    likes: 1,
+    likedBy: [1],
     comments: [
       { id: 1, user: { name: 'Admin User', batch: "N/A" }, text: 'A fascinating read!', timestamp: new Date() },
     ],
@@ -29,6 +30,7 @@ export const submissions: Submission[] = [
     description: 'A photo capturing the city lights as dusk settles.',
     status: SubmissionStatus.PENDING,
     likes: 0,
+    likedBy: [],
     comments: [],
     createdAt: new Date('2024-05-29T11:00:00Z'),
   },

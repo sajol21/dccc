@@ -28,13 +28,13 @@ interface DataContextType {
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
   setFooterSettings: React.Dispatch<React.SetStateAction<FooterSettings>>;
   getUserById: (id: number) => User | undefined;
-  addSubmission: (submission: Omit<Submission, 'id' | 'authorId' | 'status' | 'likes' | 'comments' | 'createdAt'>) => void;
+  addSubmission: (submission: Omit<Submission, 'id' | 'authorId' | 'status' | 'likes' | 'comments' | 'createdAt' | 'likedBy'>) => void;
   updateSubmissionStatus: (id: number, status: SubmissionStatus) => void;
   updateSubmission: (submission: Submission) => void;
   deleteSubmission: (id: number) => void;
   updateUserRole: (id: number, role: Role) => void;
   addComment: (submissionId: number, text: string) => void;
-  updateLikes: (submissionId: number, newLikes: number) => void;
+  toggleAppreciation: (submissionId: number) => void;
   setLeaderboard: React.Dispatch<React.SetStateAction<LeaderboardEntry[]>>;
   addGlobalNotification: (message: string) => void;
   addEvent: (event: Omit<Event, 'id'>) => void;
@@ -93,7 +93,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getUserById = (id: number) => users.find(u => u.id === id);
 
-  const addSubmission = (submission: Omit<Submission, 'id' | 'authorId' | 'status' | 'likes' | 'comments' | 'createdAt'>) => {
+  const addSubmission = (submission: Omit<Submission, 'id' | 'authorId' | 'status' | 'likes' | 'comments' | 'createdAt' | 'likedBy'>) => {
     const currentUser = getCurrentUserFromStorage();
     if (!currentUser) return;
     const newSubmission: Submission = {
@@ -102,6 +102,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       authorId: currentUser.id,
       status: SubmissionStatus.PENDING,
       likes: 0,
+      likedBy: [],
       comments: [],
       createdAt: new Date(),
     };
@@ -148,8 +149,21 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSubmissions(subs => subs.map(s => s.id === submissionId ? { ...s, comments: [newComment, ...s.comments] } : s));
   };
 
-  const updateLikes = (submissionId: number, newLikes: number) => {
-     setSubmissions(subs => subs.map(s => s.id === submissionId ? { ...s, likes: newLikes } : s));
+  const toggleAppreciation = (submissionId: number) => {
+    const currentUser = getCurrentUserFromStorage();
+    if (!currentUser) return;
+
+    setSubmissions(subs => subs.map(s => {
+        if (s.id === submissionId) {
+            const liked = s.likedBy.includes(currentUser.id);
+            const newLikedBy = liked
+                ? s.likedBy.filter(id => id !== currentUser.id)
+                : [...s.likedBy, currentUser.id];
+            
+            return { ...s, likedBy: newLikedBy, likes: newLikedBy.length };
+        }
+        return s;
+    }));
   };
 
   const addGlobalNotification = (message: string) => {
@@ -197,7 +211,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     deleteSubmission,
     updateUserRole,
     addComment,
-    updateLikes,
+    toggleAppreciation,
     setLeaderboard,
     addGlobalNotification,
     addEvent,

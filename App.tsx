@@ -12,9 +12,7 @@ import { Role } from './types';
 const Home = lazy(() => import('./pages/Home'));
 const ShowcaseForm = lazy(() => import('./pages/ShowcaseForm'));
 const Profile = lazy(() => import('./pages/Profile'));
-const MemberProfile = lazy(() => import('./pages/MemberProfile'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard'));
-const Members = lazy(() => import('./pages/Members'));
 const About = lazy(() => import('./pages/About'));
 const Resources = lazy(() => import('./pages/Resources'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -74,8 +72,6 @@ const AppContent: React.FC = () => {
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/leaderboard" element={<Leaderboard />} />
-                            <Route path="/members" element={<Members />} />
-                            <Route path="/members/:userId" element={<MemberProfile />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/resources" element={<Resources />} />
 

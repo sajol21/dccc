@@ -2,10 +2,16 @@ import React, { useContext, useState, useMemo } from 'react';
 import { DataContext } from '../context/DataContext';
 import { SubmissionCard } from '../components/SubmissionCard';
 import { SubmissionStatus, SubmissionType } from '../types';
+import { ImageModal } from '../components/ImageModal';
 
 export const Home: React.FC = () => {
   const { submissions } = useContext(DataContext);
   const [filter, setFilter] = useState<SubmissionType | 'All'>('All');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
 
   const approvedSubmissions = useMemo(() => {
     return submissions
@@ -50,7 +56,7 @@ export const Home: React.FC = () => {
         <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-1">
           {filteredSubmissions.map((submission, index) => (
             <div key={submission.id} style={{ animationDelay: `${index * 100}ms` }} className="animate-fade-in-up">
-              <SubmissionCard submission={submission} />
+              <SubmissionCard submission={submission} onImageClick={handleImageClick} />
             </div>
           ))}
         </div>
@@ -60,6 +66,7 @@ export const Home: React.FC = () => {
           <p className="text-text-secondary mt-2">There are no approved submissions in this category yet. Check back later!</p>
         </div>
       )}
+      {selectedImage && <ImageModal imageUrl={selectedImage} onClose={() => setSelectedImage(null)} />}
     </div>
   );
 };

@@ -50,6 +50,7 @@ export interface Submission {
   description: string;
   status: SubmissionStatus;
   likes: number;
+  likedBy: number[];
   comments: Comment[];
   createdAt: Date;
 }
