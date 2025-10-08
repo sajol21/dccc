@@ -3,13 +3,6 @@ import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { Role } from '../types';
 
-const executives = [
-    { name: 'Zahir Raihan', position: 'President', batch: 'HSC\'24' },
-    { name: 'Rashed Khan', position: 'General Secretary', batch: 'HSC\'24' },
-    { name: 'Fahmida Khatun', position: 'Vice President', batch: 'HSC\'23' },
-    { name: 'Sabbir Hossain', position: 'Treasurer', batch: 'Degree\'23' },
-];
-
 const UserIcon: React.FC<{className?: string}> = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -18,6 +11,9 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
 
 
 export const About: React.FC = () => {
+    const { users } = useContext(AppContext);
+    const executives = users.filter(user => user.role === Role.EXECUTIVE_MEMBER);
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
             <div className="glass-effect rounded-xl shadow-lg p-8 mb-12">
@@ -40,13 +36,13 @@ export const About: React.FC = () => {
                 <h2 className="text-3xl font-bold text-white text-center mb-8">Meet the Executive Panel</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {executives.map(member => (
-                        <div key={member.name} className="glass-effect rounded-lg p-6 text-center">
+                        <div key={member.id} className="glass-effect rounded-lg p-6 text-center">
                             <div className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-highlight bg-primary flex items-center justify-center">
                                <UserIcon className="h-20 w-20 text-text-secondary" />
                             </div>
                             <h3 className="text-xl font-bold text-white">{member.name}</h3>
-                            <p className="text-highlight font-semibold">{member.position}</p>
-                            <p className="text-text-secondary text-sm">{member.batch}</p>
+                            <p className="text-highlight font-semibold">{member.role}</p>
+                            <p className="text-text-secondary text-sm">{member.batch}, {member.department}</p>
                         </div>
                     ))}
                 </div>

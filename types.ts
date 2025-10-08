@@ -70,4 +70,5 @@ export interface Notification {
   message: string;
   read: boolean;
   createdAt: Date;
+  userId?: number;
 }

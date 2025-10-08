@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { User, Submission, LeaderboardEntry, Role, SubmissionStatus, Comment, Notification, Event } from '../types';
 import * as mock from '../data/mockData';
@@ -131,6 +132,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             message: `Your submission '${submission.title}' has been ${status.toLowerCase()}.`,
             read: false,
             createdAt: new Date(),
+            userId: submission.authorId,
         }, ...prev]);
     }
   };

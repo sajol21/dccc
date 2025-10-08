@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from 'react';
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { AppProvider, AppContext } from './context/AppContext';
@@ -7,7 +8,6 @@ import { Home } from './pages/Home';
 import { ShowcaseForm } from './pages/ShowcaseForm';
 import { Profile } from './pages/Profile';
 import { Leaderboard } from './pages/Leaderboard';
-import { Members } from './pages/Members';
 import { About } from './pages/About';
 import { Resources } from './pages/Resources';
 import { Role } from './types';
@@ -140,7 +140,6 @@ const App: React.FC = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/members" element={<Members />} />
               <Route path="/about" element={<About />} />
               <Route path="/resources" element={<Resources />} />
 

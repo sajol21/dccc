@@ -41,8 +41,11 @@ export const Header: React.FC = () => {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const userNotifications = notifications.filter(n => n.message.includes('Your submission'));
+  const userNotifications = notifications
+    .filter(n => currentUser && (!n.userId || n.userId === currentUser.id))
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   const unreadCount = userNotifications.filter(n => !n.read).length;
+
 
   const handleReadNotifications = () => {
     setNotificationsOpen(!isNotificationsOpen);
@@ -74,7 +77,6 @@ export const Header: React.FC = () => {
     { to: "/", label: "Home", icon: <icons.Home /> },
     ...(currentUser ? [{ to: "/showcase", label: "Showcase", icon: <icons.Showcase /> }] : []),
     { to: "/leaderboard", label: "Leaderboard", icon: <icons.Leaderboard /> },
-    { to: "/members", label: "Members", icon: <icons.Members /> },
     { to: "/resources", label: "Resources", icon: <icons.Resources /> },
     { to: "/about", label: "About", icon: <icons.About /> },
   ];
