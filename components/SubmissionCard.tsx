@@ -1,0 +1,168 @@
+import React, { useContext, useState } from 'react';
+// FIX: 'Role' is an enum used as a value, so it needs a value import. 'Submission' is an interface, so it can remain a type import.
+// UPDATE: Added SubmissionType to imports to use in switch statement.
+import { Role, SubmissionType, type Submission } from '../types';
+import { AppContext } from '../context/AppContext';
+
+interface SubmissionCardProps {
+  submission: Submission;
+}
+
+const AppreciateIcon = ({ filled }: { filled: boolean }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 transition-all duration-300 transform group-hover:scale-110 ${filled ? 'text-highlight fill-current' : 'text-text-secondary'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"></path>
+    </svg>
+);
+
+const SuggestionIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-text-secondary transition-all duration-300 transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+    </svg>
+);
+
+const UserIcon: React.FC<{className?: string}> = ({className}) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+);
+
+const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
+    const roleColors: Record<Role, string> = {
+        [Role.ADMIN]: 'bg-red-500/30 text-red-300 border-red-500/50',
+        [Role.EXECUTIVE_MEMBER]: 'bg-yellow-400/30 text-yellow-300 border-yellow-400/50',
+        [Role.LIFETIME_MEMBER]: 'bg-purple-500/30 text-purple-300 border-purple-500/50',
+        [Role.ASSOCIATE_MEMBER]: 'bg-teal-500/30 text-teal-300 border-teal-500/50',
+        [Role.GENERAL_MEMBER]: 'bg-sky-500/30 text-sky-300 border-sky-500/50',
+        [Role.GENERAL_STUDENT]: 'bg-slate-500/30 text-slate-300 border-slate-500/50',
+    };
+    return (
+        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${roleColors[role] || roleColors[Role.GENERAL_STUDENT]}`}>
+            {role}
+        </span>
+    )
+}
+
+export const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission }) => {
+  const { getUserById, addComment, updateLikes, currentUser } = useContext(AppContext);
+  const author = getUserById(submission.authorId);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [newSuggestion, setNewSuggestion] = useState('');
+  const [appreciated, setAppreciated] = useState(false);
+
+  const handleAppreciate = () => {
+    if(!currentUser) {
+        alert("Please log in to appreciate submissions.");
+        return;
+    }
+    const newLikes = appreciated ? submission.likes - 1 : submission.likes + 1;
+    updateLikes(submission.id, newLikes);
+    setAppreciated(!appreciated);
+  };
+
+  const handleSuggestionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newSuggestion.trim()) {
+        addComment(submission.id, newSuggestion);
+        setNewSuggestion('');
+    }
+  };
+
+  const renderContent = () => {
+    switch (submission.type) {
+      case SubmissionType.WRITING:
+        return <p className="text-text-secondary whitespace-pre-wrap leading-relaxed">{submission.content.substring(0, 350)}...</p>;
+      case SubmissionType.IMAGE:
+        return <img src={submission.content} alt={submission.title} className="rounded-lg object-cover w-full h-auto max-h-[60vh] border border-accent/50" />;
+      case SubmissionType.VIDEO:
+        return (
+          <div className="aspect-video w-full rounded-lg border border-accent/50 overflow-hidden">
+            <iframe
+              src={submission.content}
+              title={submission.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  if (!author) return null;
+
+  return (
+    <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-6 transition-all duration-500 group hover:shadow-2xl hover:shadow-highlight/20 hover:border-highlight/50">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+            <div className="h-11 w-11 rounded-full bg-accent flex items-center justify-center ring-2 ring-highlight/50 flex-shrink-0">
+            <UserIcon className="h-6 w-6 text-text-secondary" />
+            </div>
+            <div className="ml-4">
+            <p className="font-bold text-text-primary">{author.name}</p>
+            <p className="text-sm text-text-secondary">{author.batch}, {author.department}</p>
+            </div>
+        </div>
+        <RoleBadge role={author.role} />
+      </div>
+      
+      <div className="pl-2">
+        <h3 className="text-2xl font-bold mb-2 text-white">{submission.title}</h3>
+        <p className="text-sm text-text-secondary mb-4 italic">{submission.description}</p>
+        <div className="my-4">
+            {renderContent()}
+        </div>
+      </div>
+
+
+      <div className="flex items-center justify-between text-text-secondary border-t border-accent/50 pt-4 mt-4">
+        <div className="flex items-center space-x-6">
+          <button onClick={handleAppreciate} className="flex items-center space-x-2 hover:text-white transition-colors group">
+            <AppreciateIcon filled={appreciated} />
+            <span className="font-semibold">{submission.likes}</span>
+            <span className="hidden md:inline">Appreciate</span>
+          </button>
+          <button onClick={() => setShowSuggestions(!showSuggestions)} className="flex items-center space-x-2 hover:text-white transition-colors group">
+            <SuggestionIcon />
+            <span className="font-semibold">{submission.comments.length}</span>
+            <span className="hidden md:inline">Suggestions</span>
+          </button>
+        </div>
+        <div className="text-xs">
+          {submission.createdAt.toLocaleDateString()}
+        </div>
+      </div>
+
+      {showSuggestions && (
+        <div className="mt-4 pt-4 border-t border-accent/50">
+          <h4 className="font-bold mb-3 text-white">Suggestions</h4>
+          <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+            {submission.comments.map(comment => (
+              <div key={comment.id} className="bg-primary/50 p-3 rounded-lg">
+                <p className="font-semibold text-sm text-text-primary">{comment.user.name} <span className="text-xs text-text-secondary">({comment.user.batch})</span></p>
+                <p className="text-sm text-text-secondary mt-1">{comment.text}</p>
+              </div>
+            ))}
+             {submission.comments.length === 0 && <p className="text-sm text-text-secondary italic">No suggestions yet.</p>}
+          </div>
+          {currentUser && (
+            <form onSubmit={handleSuggestionSubmit} className="mt-4 flex space-x-2">
+              <input 
+                type="text" 
+                value={newSuggestion}
+                onChange={(e) => setNewSuggestion(e.target.value)}
+                placeholder="Add a suggestion..." 
+                className="w-full bg-accent/50 border border-gray-600/50 rounded-md px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/50"
+              />
+              <button type="submit" className="bg-highlight text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-sky-400 transition-colors shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+                Post
+              </button>
+            </form>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
