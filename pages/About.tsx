@@ -15,7 +15,7 @@ export const About: React.FC = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-            <div className="glass-effect rounded-xl shadow-lg p-8 mb-12">
+            <header className="glass-effect rounded-xl shadow-lg p-8 mb-12">
                 <h1 className="text-6xl font-heading text-white text-center mb-4 tracking-wider">About Dhaka College Cultural Club</h1>
                 <p className="text-2xl font-heading text-highlight text-center mb-6 tracking-wider">Fostering Creativity, Celebrating Culture.</p>
                 <div className="prose prose-invert lg:prose-xl mx-auto text-text-primary max-w-none text-justify">
@@ -29,14 +29,14 @@ export const About: React.FC = () => {
                         At DCCC, we believe that culture is the soul of a community. We strive to build a strong, inclusive community where every voice is heard, every talent is celebrated, and every member feels a sense of belonging.
                     </p>
                 </div>
-            </div>
+            </header>
 
-            <div>
+            <section>
                 <h2 className="text-5xl font-heading text-white text-center mb-8 tracking-wider">Meet the Executive Panel</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {executives.map(member => (
-                        <div key={member.id} className="glass-effect rounded-lg p-6 text-center">
-                            <div className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-highlight bg-primary flex items-center justify-center">
+                        <div key={member.id} className="glass-effect rounded-lg p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-highlight/10">
+                             <div className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-highlight bg-primary flex items-center justify-center">
                                <UserIcon className="h-20 w-20 text-text-secondary" />
                             </div>
                             <h3 className="text-xl font-bold text-white">{member.name}</h3>
@@ -45,7 +45,7 @@ export const About: React.FC = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </section>
         </div>
     );
 };

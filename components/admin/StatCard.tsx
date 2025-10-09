@@ -1,10 +1,8 @@
-
 import React from 'react';
 
 interface StatCardProps {
     title: string;
     value: number | string;
-    // FIX: Changed icon prop type to React.ReactElement<any> to solve issue with React.cloneElement inferring props as unknown.
     icon: React.ReactElement<any>;
 }
 
@@ -15,8 +13,8 @@ export const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
                 <p className="text-sm font-medium text-text-secondary">{title}</p>
                 <p className="text-3xl font-bold text-white">{value}</p>
             </div>
-            <div className="text-highlight">
-                {React.cloneElement(icon, { className: 'h-10 w-10' })}
+            <div className="text-highlight bg-accent/50 p-3 rounded-lg">
+                {React.cloneElement(icon, { className: 'h-8 w-8' })}
             </div>
         </div>
     );

@@ -42,6 +42,15 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
     )
 }
 
+const SubmissionTypeTag: React.FC<{ type: SubmissionType }> = ({ type }) => {
+    const typeStyles: Record<SubmissionType, string> = {
+        [SubmissionType.WRITING]: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+        [SubmissionType.IMAGE]: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+        [SubmissionType.VIDEO]: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    };
+    return <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${typeStyles[type]}`}>{type}</span>;
+}
+
 const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, onImageClick }) => {
   const { getUserById, addComment, toggleAppreciation } = useContext(DataContext);
   const { currentUser } = useContext(AuthContext);
@@ -56,13 +65,13 @@ const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, on
         alert("Please log in to appreciate submissions.");
         return;
     }
-    toggleAppreciation(submission.id);
+    toggleAppreciation(submission.id, currentUser.id);
   };
 
   const handleSuggestionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newSuggestion.trim()) {
-        addComment(submission.id, newSuggestion);
+    if (newSuggestion.trim() && currentUser) {
+        addComment(submission.id, newSuggestion, { id: currentUser.id, name: currentUser.name, batch: currentUser.batch });
         setNewSuggestion('');
     }
   };
@@ -70,7 +79,7 @@ const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, on
   const renderContent = () => {
     switch (submission.type) {
       case SubmissionType.WRITING:
-        return <p className="text-text-secondary whitespace-pre-wrap leading-relaxed">{submission.content.substring(0, 350)}...</p>;
+        return <p className="text-text-secondary whitespace-pre-wrap leading-relaxed prose prose-invert max-w-none">{submission.content.substring(0, 350)}...</p>;
       case SubmissionType.IMAGE:
         return (
             <img 
@@ -101,50 +110,51 @@ const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, on
   if (!author) return null;
 
   return (
-    <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-6 transition-all duration-500 group hover:shadow-2xl hover:shadow-highlight/10 hover:border-highlight/30">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-            <div className="h-11 w-11 rounded-full bg-accent flex items-center justify-center ring-2 ring-highlight/50 flex-shrink-0">
-            <UserIcon className="h-6 w-6 text-text-secondary" />
-            </div>
-            <div className="ml-4">
-            <p className="font-bold text-text-primary">{author.name}</p>
-            <p className="text-sm text-text-secondary">{author.batch}, {author.province}</p>
-            </div>
-        </div>
-        <RoleBadge role={author.role} />
-      </div>
-      
-      <div className="pl-2">
-        <h3 className="text-4xl font-heading tracking-wide mb-2 text-white">{submission.title}</h3>
-        <p className="text-sm text-text-secondary mb-4 italic">{submission.description}</p>
-        <div className="my-4">
-            {renderContent()}
-        </div>
-      </div>
+    <div className="glass-effect rounded-xl shadow-lg overflow-hidden transition-all duration-500 group hover:shadow-2xl hover:shadow-highlight/10 hover:border-highlight/30">
+        <div className="p-6 sm:p-8">
+            <header className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center ring-2 ring-highlight/50 flex-shrink-0">
+                    <UserIcon className="h-6 w-6 text-text-secondary" />
+                    </div>
+                    <div>
+                    <p className="font-bold text-text-primary">{author.name}</p>
+                    <p className="text-sm text-text-secondary">{author.batch}, {author.province}</p>
+                    </div>
+                </div>
+                <RoleBadge role={author.role} />
+            </header>
+            
+            <main>
+                <h3 className="text-3xl lg:text-4xl font-heading mb-2 text-white">{submission.title}</h3>
+                <p className="text-sm text-text-secondary mb-4 italic">{submission.description}</p>
+                <div className="my-6">
+                    {renderContent()}
+                </div>
+            </main>
 
-
-      <div className="flex items-center justify-between text-text-secondary border-t border-accent/50 pt-4 mt-4">
-        <div className="flex items-center space-x-6">
-          <button onClick={handleAppreciate} className="flex items-center space-x-2 hover:text-white transition-colors group">
-            <AppreciateIcon filled={appreciated} />
-            <span className="font-semibold">{submission.likes}</span>
-            <span className="hidden md:inline">Appreciate</span>
-          </button>
-          <button onClick={() => setShowSuggestions(!showSuggestions)} className="flex items-center space-x-2 hover:text-white transition-colors group">
-            <SuggestionIcon />
-            <span className="font-semibold">{submission.comments.length}</span>
-            <span className="hidden md:inline">Suggestions</span>
-          </button>
+            <footer className="flex items-center justify-between text-text-secondary border-t border-accent/50 pt-4 mt-4">
+                <div className="flex items-center space-x-6">
+                <button onClick={handleAppreciate} className="flex items-center space-x-2 hover:text-white transition-colors group" title="Appreciate">
+                    <AppreciateIcon filled={appreciated} />
+                    <span className="font-semibold text-sm">{submission.likes}</span>
+                </button>
+                <button onClick={() => setShowSuggestions(!showSuggestions)} className="flex items-center space-x-2 hover:text-white transition-colors group" title="Suggestions">
+                    <SuggestionIcon />
+                    <span className="font-semibold text-sm">{submission.comments.length}</span>
+                </button>
+                </div>
+                 <div className="flex items-center space-x-2">
+                    <SubmissionTypeTag type={submission.type} />
+                    <div className="text-xs">
+                        {submission.createdAt.toLocaleDateString()}
+                    </div>
+                </div>
+            </footer>
         </div>
-        <div className="text-xs">
-          {submission.createdAt.toLocaleDateString()}
-        </div>
-      </div>
-
       {showSuggestions && (
-        <div className="mt-4 pt-4 border-t border-accent/50">
-          <h4 className="font-bold mb-3 text-white">Suggestions</h4>
+        <div className="p-6 sm:p-8 border-t border-accent/50 bg-primary/20 animate-fade-in">
+          <h4 className="font-bold text-lg mb-3 text-white">Suggestions</h4>
           <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
             {submission.comments.map(comment => (
               <div key={comment.id} className="bg-primary/50 p-3 rounded-lg">
@@ -161,9 +171,9 @@ const SubmissionCardComponent: React.FC<SubmissionCardProps> = ({ submission, on
                 value={newSuggestion}
                 onChange={(e) => setNewSuggestion(e.target.value)}
                 placeholder="Add a suggestion..." 
-                className="w-full bg-accent/50 border border-gray-600/50 rounded-md px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/50"
+                className="form-input"
               />
-              <button type="submit" className="bg-highlight text-primary px-4 py-2 rounded-md text-sm font-semibold hover:bg-amber-300 transition-colors shadow-[0_0_15px_rgba(251,191,36,0.4)]">
+              <button type="submit" className="btn btn-highlight">
                 Post
               </button>
             </form>

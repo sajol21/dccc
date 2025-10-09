@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// FIX: Import `React` to make its namespace available for type annotations like `React.Dispatch`.
+import React, { useState, useEffect } from 'react';
 
 // A utility function to safely get and parse values from localStorage.
 export function getStorageValue<T>(key: string, defaultValue: T): T {

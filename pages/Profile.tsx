@@ -20,7 +20,6 @@ const EditProfileModal: React.FC<{
     const [phone, setPhone] = useState(user.phone);
     const [batchYear, setBatchYear] = useState(user.batch.replace("HSC'", ""));
     const [province, setProvince] = useState(user.province);
-    const inputClass = "block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/50";
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,34 +27,34 @@ const EditProfileModal: React.FC<{
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
             <form onSubmit={handleSubmit} className="glass-effect p-8 rounded-xl shadow-xl w-full max-w-lg space-y-4">
                 <h2 className="text-2xl font-heading text-white tracking-wide">Edit Profile</h2>
                 <div>
-                    <label className="block text-sm font-medium text-text-primary">Name</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} required />
+                    <label className="block text-sm font-medium text-text-primary mb-1">Name</label>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="form-input" required />
                 </div>
                  <div>
-                    <label className="block text-sm font-medium text-text-primary">Phone</label>
-                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className={inputClass} required />
+                    <label className="block text-sm font-medium text-text-primary mb-1">Phone</label>
+                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="form-input" required />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-text-primary">Batch</label>
+                    <label className="block text-sm font-medium text-text-primary mb-1">Batch</label>
                     <div className="flex items-stretch">
-                        <span className="inline-flex items-center px-3 rounded-l-md bg-accent/50 border border-r-0 border-gray-600/50 text-text-secondary">HSC'</span>
-                        <input type="text" value={batchYear} onChange={e => setBatchYear(e.target.value.replace(/[^0-9]/g, ''))} placeholder="25" required className={`${inputClass} rounded-l-none`} />
+                        <span className="inline-flex items-center px-3 rounded-l-md bg-accent/50 border border-r-0 border-accent text-text-secondary">HSC'</span>
+                        <input type="text" value={batchYear} onChange={e => setBatchYear(e.target.value.replace(/[^0-9]/g, ''))} placeholder="25" required className="form-input rounded-l-none" />
                     </div>
                 </div>
                  <div>
-                    <label className="block text-sm font-medium text-text-primary">Province</label>
-                    <select value={province} onChange={e => setProvince(e.target.value as Province)} className={inputClass}>
+                    <label className="block text-sm font-medium text-text-primary mb-1">Province</label>
+                    <select value={province} onChange={e => setProvince(e.target.value as Province)} className="form-select">
                         <option value={Province.CULTURAL} className="bg-secondary">Cultural Province</option>
                         <option value={Province.TECHNICAL} className="bg-secondary">Technical Province</option>
                     </select>
                 </div>
                 <div className="flex justify-end space-x-4 pt-2">
-                    <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-white transition-colors">Cancel</button>
-                    <button type="submit" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-primary hover:bg-amber-300 transition-colors">Save Changes</button>
+                    <button type="button" onClick={onCancel} className="btn btn-secondary">Cancel</button>
+                    <button type="submit" className="btn btn-highlight">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -64,8 +63,8 @@ const EditProfileModal: React.FC<{
 
 
 export const Profile: React.FC = () => {
-  const { currentUser } = useContext(AuthContext);
-  const { submissions, updateCurrentUser } = useContext(DataContext);
+  const { currentUser, updateCurrentUser } = useContext(AuthContext);
+  const { submissions } = useContext(DataContext);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -86,12 +85,12 @@ export const Profile: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-      <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-8 mb-8 flex flex-col md:flex-row items-start">
-        <div className="h-32 w-32 rounded-full bg-accent flex items-center justify-center border-4 border-highlight mb-6 md:mb-0 md:mr-8 flex-shrink-0">
+      <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-8 mb-8 flex flex-col md:flex-row items-start gap-8">
+        <div className="h-32 w-32 rounded-full bg-accent flex items-center justify-center border-4 border-highlight flex-shrink-0">
           <UserIcon className="h-20 w-20 text-text-secondary" />
         </div>
         <div className="flex-grow">
-          <h1 className="text-6xl font-heading text-white tracking-wide">{currentUser.name}</h1>
+          <h1 className="text-4xl md:text-5xl font-heading text-white tracking-wide">{currentUser.name}</h1>
           <p className="text-lg text-highlight font-semibold">{currentUser.role}</p>
           <div className="mt-4 text-text-secondary space-y-1">
             <p><strong>Batch:</strong> {currentUser.batch}</p>
@@ -100,8 +99,8 @@ export const Profile: React.FC = () => {
             <p><strong>Phone:</strong> {currentUser.phone}</p>
           </div>
         </div>
-        <div>
-           <button onClick={() => setIsEditing(true)} className="px-4 py-2 text-sm font-medium text-text-primary bg-accent/50 rounded-md hover:bg-accent transition-colors">
+        <div className="w-full md:w-auto flex justify-end">
+           <button onClick={() => setIsEditing(true)} className="btn btn-secondary">
              Edit Profile
            </button>
         </div>

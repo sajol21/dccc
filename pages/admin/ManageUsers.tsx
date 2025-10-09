@@ -9,22 +9,22 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
 );
 
 export const ManageUsers: React.FC = () => {
-  const { users, updateUserRole } = useContext(DataContext);
+  const { users, updateUserRole, toggleUserSuspension } = useContext(DataContext);
 
   return (
     <div>
       <h1 className="text-4xl font-heading text-white mb-6 tracking-wider">User Management</h1>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto glass-effect rounded-lg">
         <table className="min-w-full divide-y divide-accent">
           <thead className="bg-accent/50">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Name</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Batch & Province</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Status</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Role</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-secondary divide-y divide-accent">
+          <tbody className="bg-secondary/50 divide-y divide-accent">
             {users.map(user => (
               <tr key={user.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -40,25 +40,32 @@ export const ManageUsers: React.FC = () => {
                         </div>
                     </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
-                    {user.batch}, {user.province}
-                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === Role.ADMIN ? 'bg-red-500/20 text-red-300' : 'bg-green-500/20 text-green-300'}`}>
-                        {user.role}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isSuspended ? 'bg-red-500/20 text-red-300' : 'bg-green-500/20 text-green-300'}`}>
+                        {user.isSuspended ? 'Suspended' : 'Active'}
                     </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
+                    {user.role}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                   <select
                     value={user.role}
                     onChange={(e) => updateUserRole(user.id, e.target.value as Role)}
-                    className="bg-accent border-gray-600/50 rounded-md py-1 px-2 text-white focus:outline-none focus:ring-1 focus:ring-highlight"
+                    className="form-select py-1 px-2 text-sm"
                     disabled={user.role === Role.ADMIN}
                   >
                     {Object.values(Role).map(role => (
                       <option key={role} value={role}>{role}</option>
                     ))}
                   </select>
+                  <button 
+                    onClick={() => toggleUserSuspension(user.id)}
+                    disabled={user.role === Role.ADMIN}
+                    className={`btn text-xs ${user.isSuspended ? 'btn-success' : 'btn-danger'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                      {user.isSuspended ? 'Unsuspend' : 'Suspend'}
+                  </button>
                 </td>
               </tr>
             ))}

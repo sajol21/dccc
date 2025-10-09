@@ -8,8 +8,8 @@ const UserIcon: React.FC<{className?: string}> = ({className}) => (
     </svg>
 );
 
-const getRankColor = (rank: number) => {
-    if (rank === 1) return 'border-yellow-400 bg-yellow-400/10';
+const getRankStyles = (rank: number) => {
+    if (rank === 1) return 'border-yellow-400 bg-yellow-400/10 shadow-highlight';
     if (rank === 2) return 'border-gray-400 bg-gray-400/10';
     if (rank === 3) return 'border-yellow-600 bg-yellow-600/10';
     return 'border-accent bg-accent/20';
@@ -50,14 +50,14 @@ const LeaderboardDisplay: React.FC<LeaderboardDisplayProps> = ({ entries }) => {
                 const topSubmission = userSubmissions.length > 0 ? userSubmissions[0] : null;
 
                 return (
-                    <div key={entry.rank} className={`glass-effect p-6 rounded-xl shadow-lg border-l-4 flex flex-col ${getRankColor(entry.rank)}`}>
-                        <div className="flex items-start space-x-6">
+                    <div key={entry.rank} className={`glass-effect p-6 rounded-xl shadow-lg border-l-4 flex flex-col ${getRankStyles(entry.rank)}`}>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                             <div className={`text-6xl font-heading ${getRankTextColor(entry.rank)}`}>
                                 #{entry.rank}
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-center space-x-4 mb-2">
-                                    <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center border-2 border-highlight flex-shrink-0">
+                                    <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center border-2 border-highlight/50 flex-shrink-0">
                                         <UserIcon className="h-9 w-9 text-text-secondary" />
                                     </div>
                                     <div>
@@ -69,7 +69,7 @@ const LeaderboardDisplay: React.FC<LeaderboardDisplayProps> = ({ entries }) => {
                             </div>
                         </div>
                         {topSubmission && (
-                            <div className="mt-4 pt-4 border-t border-accent/50 ml-20">
+                            <div className="mt-4 pt-4 border-t border-accent/50 ml-0 sm:ml-[100px]">
                                 <h4 className="text-sm font-semibold text-text-secondary mb-2">Top Contribution</h4>
                                 <div className="bg-primary/50 p-3 rounded-lg hover:bg-primary transition-colors">
                                     <p className="font-bold text-text-primary">{topSubmission.title}</p>
@@ -89,21 +89,21 @@ export const Leaderboard: React.FC = () => {
     
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-            <div className="text-center mb-12">
+            <header className="text-center mb-12">
                 <h1 className="text-7xl font-heading text-white tracking-wider sm:text-8xl">Leaderboard</h1>
-                <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">Recognizing the top talents of our club. Based on Admin Appreciation and Judges' Consideration.</p>
-            </div>
+                <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">Recognizing the top talents of our club, based on admin appreciation and judges' consideration.</p>
+            </header>
             
-            <div className="mb-12">
-                <h2 className="text-5xl font-heading text-highlight tracking-wider mb-6">This Month's Standings</h2>
+            <section className="mb-12">
+                <h2 className="text-5xl font-heading text-highlight tracking-wider mb-6 text-center sm:text-left">This Month's Standings</h2>
                 <LeaderboardDisplay entries={leaderboard} />
-            </div>
+            </section>
 
             {previousLeaderboard && (
-                 <div>
-                    <h2 className="text-5xl font-heading text-highlight tracking-wider mb-6">Last Month's Winners ({previousLeaderboard.month} {previousLeaderboard.year})</h2>
+                 <section>
+                    <h2 className="text-5xl font-heading text-highlight tracking-wider mb-6 text-center sm:text-left">Last Month's Winners ({previousLeaderboard.month} {previousLeaderboard.year})</h2>
                     <LeaderboardDisplay entries={previousLeaderboard.entries} />
-                </div>
+                </section>
             )}
         </div>
     );

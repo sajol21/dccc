@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { DataContext } from '../../context/DataContext';
 import { StatCard } from '../../components/admin/StatCard';
 import { SubmissionStatus } from '../../types';
@@ -27,8 +28,9 @@ export const AdminOverview: React.FC = () => {
              <div className="mt-8">
                 <h2 className="text-2xl font-heading text-white mb-4 tracking-wider">Quick Actions</h2>
                 <div className="flex flex-wrap gap-4">
-                    <a href="#/admin/submissions" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-primary transition-colors">Manage Submissions</a>
-                    <a href="#/admin/users" className="glass-effect px-4 py-2 rounded-lg text-text-primary hover:bg-highlight hover:text-primary transition-colors">View Users</a>
+                    <Link to="/admin/submissions" className="btn btn-secondary">Manage Submissions</Link>
+                    <Link to="/admin/users" className="btn btn-secondary">View Users</Link>
+                    <Link to="/admin/events" className="btn btn-secondary">Manage Events</Link>
                 </div>
             </div>
         </div>

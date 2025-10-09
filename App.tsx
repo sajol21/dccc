@@ -1,109 +1,130 @@
-import React, { useContext, useState, useEffect, lazy, Suspense } from 'react';
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AuthProvider, AuthContext } from './context/AuthContext';
-import { DataProvider } from './context/DataContext';
+
+import React, { Suspense, useContext, useState, useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import { AuthContext } from './context/AuthContext';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { Preloader } from './components/Preloader';
 import { PageLoader } from './components/PageLoader';
 import { Role } from './types';
+import { Preloader } from './components/Preloader';
 
-// Lazy-loaded pages
-const Home = lazy(() => import('./pages/Home'));
-const ShowcaseForm = lazy(() => import('./pages/ShowcaseForm'));
-const Profile = lazy(() => import('./pages/Profile'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
-const About = lazy(() => import('./pages/About'));
-const Resources = lazy(() => import('./pages/Resources'));
-const Login = lazy(() => import('./pages/auth/Login'));
-const Register = lazy(() => import('./pages/auth/Register'));
+// Lazy load pages
+const Home = React.lazy(() => import('./pages/Home'));
+const Activities = React.lazy(() => import('./pages/Activities'));
+const Leaderboard = React.lazy(() => import('./pages/Leaderboard'));
+const Members = React.lazy(() => import('./pages/Members'));
+const MemberProfile = React.lazy(() => import('./pages/MemberProfile'));
+const Events = React.lazy(() => import('./pages/Events'));
+const About = React.lazy(() => import('./pages/About'));
+const Resources = React.lazy(() => import('./pages/Resources'));
+const ShowcaseForm = React.lazy(() => import('./pages/ShowcaseForm'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const Login = React.lazy(() => import('./pages/auth/Login'));
+const Register = React.lazy(() => import('./pages/auth/Register'));
 
-// Lazy-loaded admin pages
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
-const AdminOverview = lazy(() => import('./pages/admin/AdminOverview'));
-const ManageSubmissions = lazy(() => import('./pages/admin/ManageSubmissions'));
-const ManageUsers = lazy(() => import('./pages/admin/ManageUsers'));
-const Announcements = lazy(() => import('./pages/admin/Announcements'));
-const SiteSettings = lazy(() => import('./pages/admin/SiteSettings'));
+// Lazy load admin pages
+const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
+const AdminOverview = React.lazy(() => import('./pages/admin/AdminOverview'));
+const ManageSubmissions = React.lazy(() => import('./pages/admin/ManageSubmissions'));
+const ManageUsers = React.lazy(() => import('./pages/admin/ManageUsers'));
+const ManageEvents = React.lazy(() => import('./pages/admin/ManageEvents'));
+const ManageActivities = React.lazy(() => import('./pages/admin/ManageActivities'));
+const SiteSettings = React.lazy(() => import('./pages/admin/SiteSettings'));
+const Announcements = React.lazy(() => import('./pages/admin/Announcements'));
 
+const MainLayout: React.FC = () => (
+    <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+            <Suspense fallback={<PageLoader />}>
+                <Outlet />
+            </Suspense>
+        </main>
+        <Footer />
+    </div>
+);
 
-// A wrapper for routes that require authentication.
-const ProtectedRoute: React.FC<{ children: React.ReactElement, role?: Role }> = ({ children, role }) => {
+const AdminRoute: React.FC = () => {
     const { currentUser } = useContext(AuthContext);
-    const location = useLocation();
-    
-    if (!currentUser) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-
-    if (role && currentUser.role !== role) {
-        return <Navigate to="/" replace />;
-    }
-
-    return children;
+    if (!currentUser) return <Navigate to="/login" replace />;
+    if (currentUser.role !== Role.ADMIN) return <Navigate to="/" replace />;
+    return (
+        <Suspense fallback={<PageLoader />}>
+            <Outlet />
+        </Suspense>
+    );
 };
 
-const AppContent: React.FC = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [isFading, setIsFading] = useState(false);
+const AuthenticatedRoute: React.FC = () => {
+    const { currentUser } = useContext(AuthContext);
+    if (!currentUser) return <Navigate to="/login" replace />;
+    return (
+        <Suspense fallback={<PageLoader />}>
+            <Outlet />
+        </Suspense>
+    );
+};
+
+
+const App: React.FC = () => {
+    const [loading, setLoading] = useState(true);
+    const [fadingOut, setFadingOut] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setIsFading(true);
-            setTimeout(() => setIsLoading(false), 500); // Wait for fade out animation
-        }, 2000); // Simulate loading time
+            setFadingOut(true);
+            setTimeout(() => setLoading(false), 500); // Wait for fade out animation
+        }, 1500); // Preloader duration
 
         return () => clearTimeout(timer);
     }, []);
 
-    if (isLoading) {
-        return <Preloader fadingOut={isFading} />;
+    if (loading) {
+        return <Preloader fadingOut={fadingOut} />;
     }
 
     return (
-        <HashRouter>
-            <div className="min-h-screen flex flex-col">
-                <Header />
-                <main className="flex-grow pt-20">
-                    <Suspense fallback={<PageLoader />}>
-                        <Routes>
-                            {/* Public Routes */}
-                            <Route path="/" element={<Home />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/leaderboard" element={<Leaderboard />} />
-                            <Route path="/about" element={<About />} />
-                            <Route path="/resources" element={<Resources />} />
+        <AppProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<MainLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path="activities" element={<Activities />} />
+                        <Route path="leaderboard" element={<Leaderboard />} />
+                        <Route path="members" element={<Members />} />
+                        <Route path="members/:userId" element={<MemberProfile />} />
+                        <Route path="events" element={<Events />} />
+                        <Route path="about" element={<About />} />
+                        <Route path="resources" element={<Resources />} />
+                        
+                        <Route element={<AuthenticatedRoute />}>
+                            <Route path="showcase" element={<ShowcaseForm />} />
+                            <Route path="profile" element={<Profile />} />
+                        </Route>
+                    </Route>
+                    
+                    <Route path="/admin" element={<AdminRoute />}>
+                        <Route element={<AdminLayout/>}>
+                            <Route index element={<Navigate to="overview" replace />} />
+                            <Route path="overview" element={<AdminOverview />} />
+                            <Route path="submissions" element={<ManageSubmissions />} />
+                            <Route path="users" element={<ManageUsers />} />
+                            <Route path="events" element={<ManageEvents />} />
+                            <Route path="activities" element={<ManageActivities />} />
+                            <Route path="settings" element={<SiteSettings />} />
+                            <Route path="announcements" element={<Announcements />} />
+                        </Route>
+                    </Route>
 
-                            {/* Protected Routes for Logged-in Users */}
-                            <Route path="/showcase" element={<ProtectedRoute><ShowcaseForm /></ProtectedRoute>} />
-                            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                            
-                            {/* Protected Admin Routes */}
-                            <Route path="/admin" element={<ProtectedRoute role={Role.ADMIN}><AdminLayout /></ProtectedRoute>}>
-                                <Route index element={<AdminOverview />} />
-                                <Route path="submissions" element={<ManageSubmissions />} />
-                                <Route path="users" element={<ManageUsers />} />
-                                <Route path="announcements" element={<Announcements />} />
-                                <Route path="settings" element={<SiteSettings />} />
-                            </Route>
-                        </Routes>
-                    </Suspense>
-                </main>
-                <Footer />
-            </div>
-        </HashRouter>
+                    <Route path="/login" element={<Suspense fallback={<PageLoader />}><Login /></Suspense>} />
+                    <Route path="/register" element={<Suspense fallback={<PageLoader />}><Register /></Suspense>} />
+
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </Router>
+        </AppProvider>
     );
-};
-
-const App: React.FC = () => {
-  return (
-    <DataProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </DataProvider>
-  );
 };
 
 export default App;

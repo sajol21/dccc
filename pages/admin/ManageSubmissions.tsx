@@ -55,33 +55,33 @@ const SubmissionEditForm: React.FC<{
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
             <form onSubmit={handleSubmit} className="glass-effect p-8 rounded-xl shadow-xl w-full max-w-lg space-y-4">
                 <h2 className="text-2xl font-heading text-white tracking-wide">Edit Submission</h2>
                 <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-text-primary">Title</label>
-                    <input type="text" name="title" value={formData.title} onChange={handleChange} required className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white" />
+                    <label htmlFor="title" className="block text-sm font-medium text-text-primary mb-1">Title</label>
+                    <input type="text" name="title" value={formData.title} onChange={handleChange} required className="form-input" />
                     {errors.title && <p className="text-red-400 text-xs mt-1">{errors.title}</p>}
                 </div>
                 <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-text-primary">Type</label>
-                    <select name="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white">
-                        {Object.values(SubmissionType).map(t => <option key={t} value={t} className="bg-secondary">{t}</option>)}
+                    <label htmlFor="type" className="block text-sm font-medium text-text-primary mb-1">Type</label>
+                    <select name="type" value={formData.type} onChange={handleChange} className="form-select">
+                        {Object.values(SubmissionType).map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="content" className="block text-sm font-medium text-text-primary">Content/Link</label>
-                    <textarea name="content" value={formData.content} onChange={handleChange} required rows={5} className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white" />
+                    <label htmlFor="content" className="block text-sm font-medium text-text-primary mb-1">Content/Link</label>
+                    <textarea name="content" value={formData.content} onChange={handleChange} required rows={5} className="form-textarea" />
                     {errors.content && <p className="text-red-400 text-xs mt-1">{errors.content}</p>}
                 </div>
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-text-primary">Description</label>
-                    <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white" />
+                    <label htmlFor="description" className="block text-sm font-medium text-text-primary mb-1">Description</label>
+                    <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} className="form-textarea" />
                     {errors.description && <p className="text-red-400 text-xs mt-1">{errors.description}</p>}
                 </div>
                 <div className="flex justify-end space-x-4 pt-2">
-                    <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-white transition-colors">Cancel</button>
-                    <button type="submit" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-primary hover:bg-amber-300 transition-colors">Save Changes</button>
+                    <button type="button" onClick={onCancel} className="btn btn-secondary">Cancel</button>
+                    <button type="submit" className="btn btn-highlight">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -129,19 +129,19 @@ export const ManageSubmissions: React.FC = () => {
                     placeholder="Search by title..." 
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full md:w-1/3 bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight"
+                    className="form-input md:w-1/3"
                 />
                  <select 
                     value={filterStatus}
                     onChange={e => setFilterStatus(e.target.value as any)}
-                    className="w-full md:w-auto bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight"
+                    className="form-select md:w-auto"
                 >
                     <option value="All">All Statuses</option>
                     {Object.values(SubmissionStatus).map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
             </div>
             
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto glass-effect rounded-lg">
                 <table className="min-w-full divide-y divide-accent">
                     <thead className="bg-accent/50">
                         <tr>
@@ -151,7 +151,7 @@ export const ManageSubmissions: React.FC = () => {
                             <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-secondary divide-y divide-accent">
+                    <tbody className="bg-secondary/50 divide-y divide-accent">
                         {filteredSubmissions.map(sub => {
                             const author = getUserById(sub.authorId);
                             return (

@@ -18,7 +18,7 @@ export const Announcements: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-4xl font-heading text-white mb-6 tracking-wider">Send Announcement</h1>
+            <h1 className="text-4xl font-heading text-white mb-2 tracking-wider">Send Announcement</h1>
             <p className="text-text-secondary mb-6">This message will be sent as a notification to all users.</p>
 
             {sent && (
@@ -28,21 +28,21 @@ export const Announcements: React.FC = () => {
                 </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 glass-effect p-6 rounded-lg">
                 <div>
-                    <label htmlFor="announcement-message" className="block text-sm font-medium text-text-primary">Message</label>
+                    <label htmlFor="announcement-message" className="block text-sm font-medium text-text-primary mb-1">Message</label>
                     <textarea 
                         id="announcement-message"
                         value={message}
                         onChange={e => setMessage(e.target.value)}
                         required
                         rows={5}
-                        className="mt-1 block w-full bg-accent/50 border-gray-600/50 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight"
+                        className="form-textarea"
                         placeholder="e.g., The Annual Cultural Fest is starting next week! Get ready."
                     />
                 </div>
                 <div className="flex justify-end">
-                    <button type="submit" className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-primary bg-highlight hover:bg-amber-300">
+                    <button type="submit" className="btn btn-highlight">
                         Send Notification
                     </button>
                 </div>

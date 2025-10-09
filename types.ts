@@ -1,16 +1,17 @@
+
 export enum Role {
-  GENERAL_STUDENT = 'General Student',
-  GENERAL_MEMBER = 'General Member',
-  ASSOCIATE_MEMBER = 'Associate Member',
+  ADMIN = 'Admin',
   EXECUTIVE_MEMBER = 'Executive Member',
   LIFETIME_MEMBER = 'Lifetime Member',
-  ADMIN = 'Admin',
+  ASSOCIATE_MEMBER = 'Associate Member',
+  GENERAL_MEMBER = 'General Member',
+  GENERAL_STUDENT = 'General Student',
 }
 
 export enum SubmissionType {
-  WRITING = 'Article/Writing',
-  IMAGE = 'Image Link',
-  VIDEO = 'Video Link',
+  WRITING = 'Writing',
+  IMAGE = 'Image',
+  VIDEO = 'Video',
 }
 
 export enum SubmissionStatus {
@@ -20,8 +21,8 @@ export enum SubmissionStatus {
 }
 
 export enum Province {
-    CULTURAL = 'Cultural Province',
-    TECHNICAL = 'Technical Province',
+  CULTURAL = 'Cultural Province',
+  TECHNICAL = 'Technical Province',
 }
 
 export interface User {
@@ -29,39 +30,37 @@ export interface User {
   name: string;
   email: string;
   phone: string;
-  batch: string;
+  batch: string; // e.g., "HSC'25"
   province: Province;
   role: Role;
+  isSuspended: boolean;
 }
 
 export interface Comment {
   id: number;
-  user: Pick<User, 'name' | 'batch'>;
+  user: {
+    id: number;
+    name: string;
+    batch: string;
+  };
   text: string;
-  timestamp: Date;
+  createdAt: Date;
 }
 
 export interface Submission {
   id: number;
   authorId: number;
   title: string;
-  type: SubmissionType;
-  content: string; // Text for writing, URL for image/video
   description: string;
-  status: SubmissionStatus;
+  type: SubmissionType;
+  content: string; // URL for image/video, text for writing
   likes: number;
-  likedBy: number[];
+  likedBy: number[]; // Array of user IDs
   comments: Comment[];
   createdAt: Date;
+  status: SubmissionStatus;
 }
 
-export interface LeaderboardEntry {
-  rank: number;
-  memberId: number;
-  note: string;
-}
-
-// FIX: Added Event interface to define the shape of event objects.
 export interface Event {
   id: number;
   title: string;
@@ -70,16 +69,44 @@ export interface Event {
   description: string;
 }
 
-export interface Notification {
+export interface Activity {
   id: number;
-  message: string;
-  read: boolean;
-  createdAt: Date;
-  userId?: number;
+  title: string;
+  description: string;
+  imageUrl: string;
 }
 
-export interface ArchivedLeaderboard {
-    month: string;
-    year: number;
-    entries: LeaderboardEntry[];
+export interface LeaderboardEntry {
+  rank: number;
+  memberId: number;
+  note: string;
+}
+
+export interface Leaderboard {
+  month: string;
+  year: number;
+  entries: LeaderboardEntry[];
+}
+
+export interface ContactInfo {
+  address: string;
+  email: string;
+  phone: string;
+}
+
+export interface SocialLinks {
+  facebook: string;
+  twitter: string;
+  instagram: string;
+}
+
+export interface FooterSettings {
+  contact: ContactInfo;
+  social: SocialLinks;
+}
+
+export interface GlobalNotification {
+    id: number;
+    message: string;
+    createdAt: Date;
 }

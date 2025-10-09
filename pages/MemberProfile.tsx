@@ -33,12 +33,12 @@ export const MemberProfile: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-      <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-8 mb-8 flex flex-col md:flex-row items-start">
-        <div className="h-32 w-32 rounded-full bg-accent flex items-center justify-center border-4 border-highlight mb-6 md:mb-0 md:mr-8 flex-shrink-0">
+      <div className="glass-effect rounded-xl shadow-lg overflow-hidden p-8 mb-8 flex flex-col md:flex-row items-start gap-8">
+        <div className="h-32 w-32 rounded-full bg-accent flex items-center justify-center border-4 border-highlight flex-shrink-0">
           <UserIcon className="h-20 w-20 text-text-secondary" />
         </div>
         <div className="flex-grow">
-          <h1 className="text-6xl font-heading text-white tracking-wide">{user.name}</h1>
+          <h1 className="text-4xl md:text-5xl font-heading text-white tracking-wide">{user.name}</h1>
           <p className="text-lg text-highlight font-semibold">{user.role}</p>
           <div className="mt-4 text-text-secondary space-y-1">
             <p><strong>Batch:</strong> {user.batch}</p>

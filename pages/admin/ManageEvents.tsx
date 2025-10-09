@@ -19,16 +19,16 @@ const EventForm: React.FC<{ event?: Event, onSave: (event: Omit<Event, 'id'> | E
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
             <form onSubmit={handleSubmit} className="glass-effect p-8 rounded-xl shadow-xl w-full max-w-lg space-y-4">
                 <h2 className="text-xl font-bold text-white">{event ? 'Edit Event' : 'Add New Event'}</h2>
-                <input type="text" placeholder="Event Title" value={title} onChange={e => setTitle(e.target.value)} required className="w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white"/>
-                <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)} required className="w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white"/>
-                <input type="text" placeholder="Venue" value={venue} onChange={e => setVenue(e.target.value)} required className="w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white"/>
-                <textarea placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} required rows={4} className="w-full bg-accent/50 border-gray-600/50 rounded-md py-2 px-3 text-white"/>
+                <input type="text" placeholder="Event Title" value={title} onChange={e => setTitle(e.target.value)} required className="form-input"/>
+                <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)} required className="form-input"/>
+                <input type="text" placeholder="Venue" value={venue} onChange={e => setVenue(e.target.value)} required className="form-input"/>
+                <textarea placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} required rows={4} className="form-textarea"/>
                 <div className="flex justify-end space-x-4">
-                    <button type="button" onClick={onCancel} className="px-4 py-2 rounded-md text-sm font-medium text-text-secondary hover:bg-accent hover:text-white">Cancel</button>
-                    <button type="submit" className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-white hover:bg-sky-400">Save Event</button>
+                    <button type="button" onClick={onCancel} className="btn btn-secondary">Cancel</button>
+                    <button type="submit" className="btn btn-highlight">Save Event</button>
                 </div>
             </form>
         </div>
@@ -58,13 +58,13 @@ export const ManageEvents: React.FC = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-white">Manage Events</h1>
-                <button onClick={() => { setEditingEvent(undefined); setModalOpen(true); }} className="px-4 py-2 rounded-md text-sm font-medium bg-highlight text-white hover:bg-sky-400">Add Event</button>
+                <h1 className="text-4xl font-heading text-white tracking-wider">Manage Events</h1>
+                <button onClick={() => { setEditingEvent(undefined); setModalOpen(true); }} className="btn btn-highlight">Add Event</button>
             </div>
 
             <div className="space-y-4">
                 {events.map(event => (
-                    <div key={event.id} className="bg-accent/50 p-4 rounded-lg flex justify-between items-center">
+                    <div key={event.id} className="glass-effect p-4 rounded-lg flex justify-between items-center">
                         <div>
                             <p className="font-bold text-text-primary">{event.title}</p>
                             <p className="text-sm text-text-secondary">{event.date.toLocaleDateString()} at {event.venue}</p>
@@ -81,3 +81,6 @@ export const ManageEvents: React.FC = () => {
         </div>
     );
 };
+
+const LazyManageEvents = () => <ManageEvents />;
+export default LazyManageEvents;

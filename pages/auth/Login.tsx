@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 const Login: React.FC = () => {
@@ -14,8 +14,12 @@ const Login: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        if (login(email)) {
+        const result = login(email);
+        
+        if (result === 'success') {
             navigate(from, { replace: true });
+        } else if (result === 'suspended') {
+            setError('Your account has been suspended by an administrator.');
         } else {
             setError('Invalid email or user not found.');
         }
@@ -31,12 +35,18 @@ const Login: React.FC = () => {
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-1">Email</label>
                             <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} required
-                                   className="block w-full bg-accent/50 border-gray-600/50 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight" />
+                                   className="form-input" />
                         </div>
-                        <button type="submit" className="w-full justify-center py-3 px-4 border shadow-sm text-sm font-semibold rounded-md text-primary bg-highlight hover:bg-amber-300 transition-colors shadow-[0_0_20px_rgba(251,191,36,0.4)] focus:outline-none">
+                        <button type="submit" className="w-full btn btn-highlight">
                             Login
                         </button>
                     </form>
+                     <p className="text-sm text-center text-text-secondary mt-6">
+                        Don't have an account?{' '}
+                        <Link to="/register" className="font-medium text-highlight hover:underline">
+                            Register here
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

@@ -29,10 +29,10 @@ export const Members: React.FC = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-            <div className="text-center mb-12">
+            <header className="text-center mb-12">
                 <h1 className="text-7xl font-heading text-white tracking-wider sm:text-8xl">Member Directory</h1>
                 <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">Connect with the official members of our club community.</p>
-            </div>
+            </header>
             
             <div className="mb-8 max-w-lg mx-auto">
                 <input 
@@ -40,7 +40,7 @@ export const Members: React.FC = () => {
                     placeholder="Search by name, batch, or province..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full glass-effect border-transparent rounded-full px-5 py-3 text-white focus:outline-none focus:ring-2 focus:ring-highlight placeholder-text-secondary/80"
+                    className="w-full form-input rounded-full"
                 />
             </div>
             
